@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Place Autocomplete and Directions</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      .container{
+        width: 1250px;
+      }
+      #map {
+        height: 425px;
+        border: 1px solid #000;
+      }
+
+      #map1 {
+        height: 425px;
+        border: 1px solid #000;
+      }
+
+      #map2 {
+        height: 425px;
+        border: 1px solid #000;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      .controls {
+        margin-top: 10px;
+        border: 1px solid transparent;
+        border-radius: 2px 0 0 2px;
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        height: 32px;
+        outline: none;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+      }
+
+      #origin-input,
+      #destination-input {
+        background-color: #fff;
+        font-family: Roboto;
+        font-size: 15px;
+        font-weight: 300;
+        /*margin-left: 12px;*/
+        padding: 0 11px 0 13px;
+        text-overflow: ellipsis;
+        width: 200px;
+      }
+
+      #origin-input:focus,
+      #destination-input:focus {
+        border-color: #4d90fe;
+      }
+
+      #mode-selector {
+        color: #fff;
+        background-color: #4d90fe;
+        margin-bottom: 12px;
+        padding: 5px 11px 0px 11px;
+      }
+
+      #mode-selector label {
+        font-family: Roboto;
+        font-size: 13px;
+        font-weight: 300;
+      }
+
+      #origin-input1,
+      #destination-input1 {
+        background-color: #fff;
+        font-family: Roboto;
+        font-size: 15px;
+        font-weight: 300;
+        /*margin-left: 12px;*/
+        padding: 0 11px 0 13px;
+        text-overflow: ellipsis;
+        width: 200px;
+      }
+
+      #origin-input1:focus,
+      #destination-input1:focus {
+        border-color: #4d90fe;
+      }
+
+      #mode-selector1 {
+        color: #fff;
+        background-color: #4d90fe;
+        margin-bottom: 12px;
+        padding: 5px 11px 0px 11px;
+      }
+
+      #mode-selector1 label {
+        font-family: Roboto;
+        font-size: 13px;
+        font-weight: 300;
+      }
+
+
+
+      #origin-input2,
+      #destination-input2 {
+        background-color: #fff;
+        font-family: Roboto;
+        font-size: 15px;
+        font-weight: 300;
+        /*margin-left: 12px;*/
+        padding: 0 11px 0 13px;
+        text-overflow: ellipsis;
+        width: 200px;
+      }
+
+      #origin-input2:focus,
+      #destination-input2:focus {
+        border-color: #4d90fe;
+      }
+
+      #mode-selector2 {
+        color: #fff;
+        background-color: #4d90fe;
+        margin-bottom: 12px;
+        padding: 5px 11px 0px 11px;
+      }
+
+      #mode-selector2 label {
+        font-family: Roboto;
+        font-size: 13px;
+        font-weight: 300;
+      }
+
+      .controls.origin-input {
+        /*visibility: hidden;*/
+      }
+
+    </style>
+  </head>
+  <body>
+    <div class="container">
+
+      <div class="row">
+        <div class="col-lg-12">
+          <input id="unified-origin-input" class="controls" type="text"
+                  placeholder="Enter an origin location">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-4">
+          <div>
+              <input id="destination-input" class="controls" type="text"
+                  placeholder="Enter a destination location">
+
+              <div id="mode-selector" class="controls">
+                <input type="radio" name="type" id="changemode-walking" checked="checked">
+                <label for="changemode-walking">Walking</label>
+
+                <input type="radio" name="type" id="changemode-transit">
+                <label for="changemode-transit">Transit</label>
+
+                <input type="radio" name="type" id="changemode-driving">
+                <label for="changemode-driving">Driving</label>
+              </div>
+          </div>
+
+          <div id="map"></div>
+        </div>
+
+        <div class="col-lg-4">
+          <div>
+              <input id="destination-input1" class="controls" type="text"
+                  placeholder="Enter a destination location">
+
+              <div id="mode-selector1" class="controls">
+                <input type="radio" name="type" id="changemode-walking1" checked="checked">
+                <label for="changemode-walking1">Walking</label>
+
+                <input type="radio" name="type" id="changemode-transit1">
+                <label for="changemode-transit1">Transit</label>
+
+                <input type="radio" name="type" id="changemode-driving1">
+                <label for="changemode-driving1">Driving</label>
+              </div>
+          </div>
+
+          <div id="map1"></div>
+        </div>
+
+        <div class="col-lg-4">
+          <div>
+              <input id="destination-input2" class="controls origin-input" type="text"
+                  placeholder="Enter a destination location">
+
+              <div id="mode-selector2" class="controls">
+                <input type="radio" name="type" id="changemode-walking2" checked="checked">
+                <label for="changemode-walking2">Walking</label>
+
+                <input type="radio" name="type" id="changemode-transit2">
+                <label for="changemode-transit2">Transit</label>
+
+                <input type="radio" name="type" id="changemode-driving2">
+                <label for="changemode-driving2">Driving</label>
+              </div>
+          </div>
+
+          <div id="map2"></div>
+
+        </div>
+      </div> <!-- div class="row"-->
+
+  </div><!-- div class="container" -->
+
+
+    <script>
+// This example requires the Places library. Include the libraries=places
+// parameter when you first load the API. For example:
+// <script
+// src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
+
+function initMap() {
+  var map = new google.maps.Map(document.getElementById('map'), {
+    mapTypeControl: false,
+    center: {lat: -33.8688, lng: 151.2195},
+    zoom: 13
+  });
+
+  var handler1 = new AutocompleteDirectionsHandler(map);
+
+  var map1 = new google.maps.Map(document.getElementById('map1'), {
+    mapTypeControl: false,
+    center: {lat:  37.423021, lng: -122.083739},
+    zoom: 13
+  });
+
+  var handler2 = new AutocompleteDirectionsHandler1(map1);
+
+
+  var map2 = new google.maps.Map(document.getElementById('map2'), {
+  mapTypeControl: false,
+  center: {lat:  37.423021, lng: -122.083739},
+  zoom: 13
+  });
+
+  var handler3 = new AutocompleteDirectionsHandler2(map2);
+
+  var originInput = document.getElementById('unified-origin-input');
+  var originAutocomplete = new google.maps.places.Autocomplete(originInput);
+  originAutocomplete.setFields(['place_id']);
+
+  var allhandlers = [handler1, handler2, handler3];
+  setupUnifiedPlaceChangedListener(originAutocomplete, allhandlers, 'ORIG');
+
+}
+
+function setupUnifiedPlaceChangedListener(autocomplete, handlers, mode) {
+  autocomplete.addListener('place_changed', function() {
+    var place = autocomplete.getPlace();
+
+    if (!place.place_id) {
+      window.alert('Please select an option from the dropdown list.');
+      return;
+    }
+    if (mode === 'ORIG') {
+      for(ix in handlers) {
+        handlers[ix].originPlaceId = place.place_id;
+      }
+    } else {
+      for(ix in handlers) {
+        handlers[ix].destinationPlaceId = place.place_id;
+      }
+    }
+    for(ix in handlers) {
+      handlers[ix].route();
+    }
+  });
+}
+
+
+/**
+ * @constructor
+ */
+function AutocompleteDirectionsHandler(map) {
+  this.map = map;
+  this.originPlaceId = null;
+  this.destinationPlaceId = null;
+  this.travelMode = 'WALKING';
+  this.directionsService = new google.maps.DirectionsService;
+  this.directionsDisplay = new google.maps.DirectionsRenderer;
+  this.directionsDisplay.setMap(map);
+
+  var destinationInput = document.getElementById('destination-input');
+  var modeSelector = document.getElementById('mode-selector');
+
+  var destinationAutocomplete =
+      new google.maps.places.Autocomplete(destinationInput);
+  // Specify just the place data fields that you need.
+  destinationAutocomplete.setFields(['place_id']);
+
+  this.setupClickListener('changemode-walking', 'WALKING');
+  this.setupClickListener('changemode-transit', 'TRANSIT');
+  this.setupClickListener('changemode-driving', 'DRIVING');
+
+  this.setupPlaceChangedListener(destinationAutocomplete, 'DEST');
+
+  // this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(originInput);
+  // this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(
+  //     destinationInput);
+  // this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(modeSelector);
+  return this;
+}
+
+// Sets a listener on a radio button to change the filter type on Places
+// Autocomplete.
+AutocompleteDirectionsHandler.prototype.setupClickListener = function(
+    id, mode) {
+  var radioButton = document.getElementById(id);
+  var me = this;
+
+  radioButton.addEventListener('click', function() {
+    me.travelMode = mode;
+    me.route();
+  });
+};
+
+AutocompleteDirectionsHandler.prototype.setupPlaceChangedListener = function(
+    autocomplete, mode) {
+  var me = this;
+
+  autocomplete.addListener('place_changed', function() {
+    var place = autocomplete.getPlace();
+
+    if (!place.place_id) {
+      window.alert('Please select an option from the dropdown list.');
+      return;
+    }
+    if (mode === 'ORIG') {
+      me.originPlaceId = place.place_id;
+    } else {
+      me.destinationPlaceId = place.place_id;
+    }
+    me.route();
+  });
+};
+
+AutocompleteDirectionsHandler.prototype.route = function() {
+  if (!this.originPlaceId || !this.destinationPlaceId) {
+    return;
+  }
+  var me = this;
+
+  this.directionsService.route(
+      {
+        origin: {'placeId': this.originPlaceId},
+        destination: {'placeId': this.destinationPlaceId},
+        travelMode: this.travelMode
+      },
+      function(response, status) {
+        if (status === 'OK') {
+          me.directionsDisplay.setDirections(response);
+        } else {
+          window.alert('Directions request failed due to ' + status);
+        }
+      });
+};
+
+
+
+
+
+function AutocompleteDirectionsHandler1(map) {
+  this.map = map;
+  this.originPlaceId = null;
+  this.destinationPlaceId = null;
+  this.travelMode = 'WALKING';
+  this.directionsService = new google.maps.DirectionsService;
+  this.directionsDisplay = new google.maps.DirectionsRenderer;
+  this.directionsDisplay.setMap(map);
+
+  var originInput = document.getElementById('unified-origin-input');
+  var destinationInput = document.getElementById('destination-input1');
+  var modeSelector = document.getElementById('mode-selector1');
+
+  var destinationAutocomplete =
+      new google.maps.places.Autocomplete(destinationInput);
+  // Specify just the place data fields that you need.
+  destinationAutocomplete.setFields(['place_id']);
+
+  this.setupClickListener('changemode-walking1', 'WALKING');
+  this.setupClickListener('changemode-transit1', 'TRANSIT');
+  this.setupClickListener('changemode-driving1', 'DRIVING');
+
+  this.setupPlaceChangedListener(destinationAutocomplete, 'DEST');
+
+  // this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(originInput);
+  // this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(
+  //     destinationInput);
+  // this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(modeSelector);
+}
+
+// Sets a listener on a radio button to change the filter type on Places
+// Autocomplete.
+AutocompleteDirectionsHandler1.prototype.setupClickListener = function(
+    id, mode) {
+  var radioButton = document.getElementById(id);
+  var me = this;
+
+  radioButton.addEventListener('click', function() {
+    me.travelMode = mode;
+    me.route();
+  });
+};
+
+AutocompleteDirectionsHandler1.prototype.setupPlaceChangedListener = function(
+    autocomplete, mode) {
+  var me = this;
+
+  autocomplete.addListener('place_changed', function() {
+    var place = autocomplete.getPlace();
+
+    if (!place.place_id) {
+      window.alert('Please select an option from the dropdown list.');
+      return;
+    }
+    if (mode === 'ORIG') {
+      me.originPlaceId = place.place_id;
+    } else {
+      me.destinationPlaceId = place.place_id;
+    }
+    me.route();
+  });
+};
+
+AutocompleteDirectionsHandler1.prototype.route = function() {
+  if (!this.originPlaceId || !this.destinationPlaceId) {
+    return;
+  }
+  var me = this;
+
+  this.directionsService.route(
+      {
+        origin: {'placeId': this.originPlaceId},
+        destination: {'placeId': this.destinationPlaceId},
+        travelMode: this.travelMode
+      },
+      function(response, status) {
+        if (status === 'OK') {
+          me.directionsDisplay.setDirections(response);
+        } else {
+          window.alert('Directions request failed due to ' + status);
+        }
+      });
+};
+
+
+
+function AutocompleteDirectionsHandler2(map) {
+  this.map = map;
+  this.originPlaceId = null;
+  this.destinationPlaceId = null;
+  this.travelMode = 'WALKING';
+  this.directionsService = new google.maps.DirectionsService;
+  this.directionsDisplay = new google.maps.DirectionsRenderer;
+  this.directionsDisplay.setMap(map);
+
+  var originInput = document.getElementById('origin-input2');
+  var destinationInput = document.getElementById('destination-input2');
+  var modeSelector = document.getElementById('mode-selector2');
+
+  var destinationAutocomplete =
+      new google.maps.places.Autocomplete(destinationInput);
+  // Specify just the place data fields that you need.
+  destinationAutocomplete.setFields(['place_id']);
+
+  this.setupClickListener('changemode-walking1', 'WALKING');
+  this.setupClickListener('changemode-transit1', 'TRANSIT');
+  this.setupClickListener('changemode-driving1', 'DRIVING');
+
+  this.setupPlaceChangedListener(destinationAutocomplete, 'DEST');
+
+  // this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(originInput);
+  // this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(
+  //     destinationInput);
+  // this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(modeSelector);
+}
+
+// Sets a listener on a radio button to change the filter type on Places
+// Autocomplete.
+AutocompleteDirectionsHandler2.prototype.setupClickListener = function(
+    id, mode) {
+  var radioButton = document.getElementById(id);
+  var me = this;
+
+  radioButton.addEventListener('click', function() {
+    me.travelMode = mode;
+    me.route();
+  });
+};
+
+AutocompleteDirectionsHandler2.prototype.setupPlaceChangedListener = function(
+    autocomplete, mode) {
+  var me = this;
+
+  autocomplete.addListener('place_changed', function() {
+    var place = autocomplete.getPlace();
+
+    if (!place.place_id) {
+      window.alert('Please select an option from the dropdown list.');
+      return;
+    }
+    if (mode === 'ORIG') {
+      me.originPlaceId = place.place_id;
+    } else {
+      me.destinationPlaceId = place.place_id;
+    }
+    me.route();
+  });
+};
+
+AutocompleteDirectionsHandler2.prototype.route = function() {
+  if (!this.originPlaceId || !this.destinationPlaceId) {
+    return;
+  }
+  var me = this;
+
+  this.directionsService.route(
+      {
+        origin: {'placeId': this.originPlaceId},
+        destination: {'placeId': this.destinationPlaceId},
+        travelMode: this.travelMode
+      },
+      function(response, status) {
+        if (status === 'OK') {
+          me.directionsDisplay.setDirections(response);
+        } else {
+          window.alert('Directions request failed due to ' + status);
+        }
+      });
+};
+
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDiB83_sxJcvbvcVjgYzA7ANGtpJTUx10M&libraries=places&callback=initMap"
+        async defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+
+  </body>
+</html>
