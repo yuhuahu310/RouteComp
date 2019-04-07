@@ -119,6 +119,7 @@
       .controls.origin-input {
         /*visibility: hidden;*/
       }
+
       #output{
         font-size:20px;
       }
@@ -128,6 +129,17 @@
       #output2{
         font-style:20px;
       }
+      #outputT{
+        font-size:20px;
+      }
+      #output1T{
+        font-style:20px;
+      }
+      #output2T{
+        font-style:20px;
+      }
+
+
 
       #unified-origin-input{
         background-color: #fff;
@@ -215,6 +227,7 @@
 
           <div id="map"></div>
           <div id="output"></div>
+          <div id="outputT"></div>
         </div>
 
         <div class="col-lg-4">
@@ -236,6 +249,7 @@
 
           <div id="map1"></div>
           <div id="output1"></div>
+          <div id="output1T"></div>
         </div>
 
         <div class="col-lg-4">
@@ -257,6 +271,7 @@
 
           <div id="map2"></div>
           <div id="output2"></div>
+          <div id="output2T"></div>
         </div>
       </div> <!-- div class="row"-->
 
@@ -433,11 +448,10 @@ var service = new google.maps.DistanceMatrixService();
             var originList = response.originAddresses;
             var destinationList = response.destinationAddresses;
             var outputDiv = document.getElementById('output');
-            outputDiv.innerHTML = 'Distance:';
+            var outputDivT = document.getElementById('outputT');
             var results = response.rows[0].elements; 
-            outputDiv.innerHTML += results[0].distance.text;
-            outputDiv.innerHTML += '   Time:'
-            outputDiv.innerHTML += results[0].duration.text;
+            outputDiv.innerHTML = results[0].distance.text;
+            outputDivT.innerHTML = results[0].duration.text;
           }
      });
 };
@@ -546,11 +560,10 @@ var service = new google.maps.DistanceMatrixService();
             var originList = response.originAddresses;
             var destinationList = response.destinationAddresses;
             var outputDiv = document.getElementById('output1');
-            outputDiv.innerHTML = 'Distance:';
+            var outputDivT = document.getElementById('output1T');
             var results = response.rows[0].elements; 
-            outputDiv.innerHTML += results[0].distance.text;
-            outputDiv.innerHTML += '   Time:'
-            outputDiv.innerHTML += results[0].duration.text;
+            outputDiv.innerHTML = results[0].distance.text;
+            outputDivT.innerHTML = results[0].duration.text;
           }
      });
 };
@@ -657,11 +670,10 @@ var service = new google.maps.DistanceMatrixService();
             var originList = response.originAddresses;
             var destinationList = response.destinationAddresses;
             var outputDiv = document.getElementById('output2');
-            outputDiv.innerHTML = 'Distance:';
+            var outputDivT = document.getElementById('output2T');
             var results = response.rows[0].elements; 
-            outputDiv.innerHTML += results[0].distance.text;
-            outputDiv.innerHTML += '   Time:'
-            outputDiv.innerHTML += results[0].duration.text;
+            outputDiv.innerHTML = results[0].distance.text;
+            outputDivT.innerHTML = results[0].duration.text;
           }
      });
 };
