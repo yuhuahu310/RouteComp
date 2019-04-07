@@ -225,7 +225,7 @@
             <div class="col-lg-12">
               <div class="content">
                 <h1>RouteComp;</h1>
-                <h3>Make fast and informed decisions of your destinations</h3>
+                <h3><div id="text"></div></h3>
                 <hr id="for-header">
                 <button class="btn btn-default btn-lg"><a href="three_maps_with_distances.html#origin-btn">Get Started <i class="map marker alternate icon"></i></a></button>
               </div>
@@ -421,515 +421,559 @@
 
 
     <script>
-// This example requires the Places library. Include the libraries=places
-// parameter when you first load the API. For example:
-// <script
-// src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
-$(document).ready(function() {
-  
-  $(window).scroll(function () {
-      //if you hard code, then use console
-      //.log to determine when you want the 
-      //nav bar to stick.  
-      console.log($(window).scrollTop())
-    if ($(window).scrollTop() > 665) {
-      $('#nav-float').addClass('sticky');
-      $('#nav-float1').addClass('sticky');
-      $('#nav-float2').addClass('sticky');
-    }
-    if ($(window).scrollTop() < 665) {
-      $('#nav-float').removeClass('sticky');
-      $('#nav-float1').removeClass('sticky');
-      $('#nav-float2').removeClass('sticky');
-    }
-  });
-});
+      // List of sentences
+      var _CONTENT = [ "Make fast and informed decisions of your destinations", "Find a safe apartment", "Hang out night without worries"];
 
-function initMap() {
-  var map = new google.maps.Map(document.getElementById('map'), {
-    mapTypeControl: false,
-    center: {lat: -33.8688, lng: 151.2195},
-    zoom: 13
-  });
+      // Current sentence being processed
+      var _PART = 0;
 
-  var handler1 = new AutocompleteDirectionsHandler(map);
+      // Character number of the current sentence being processed 
+      var _PART_INDEX = 0;
 
-  var map1 = new google.maps.Map(document.getElementById('map1'), {
-    mapTypeControl: false,
-    center: {lat:  37.423021, lng: -122.083739},
-    zoom: 13
-  });
+      // Holds the handle returned from setInterval
+      var _INTERVAL_VAL;
 
-  var handler2 = new AutocompleteDirectionsHandler1(map1);
+      // Element that holds the text
+      var _ELEMENT = document.querySelector("#text");
 
+      // Implements typing effect
+      function Type() { 
+        var text =  _CONTENT[_PART].substring(0, _PART_INDEX + 1);
+        _ELEMENT.innerHTML = text;
+        _PART_INDEX++;
 
-  var map2 = new google.maps.Map(document.getElementById('map2'), {
-  mapTypeControl: false,
-  center: {lat:  37.423021, lng: -122.083739},
-  zoom: 13
-  });
-
-  var handler3 = new AutocompleteDirectionsHandler2(map2);
-
-  var originInput = document.getElementById('unified-origin-input');
-  var originAutocomplete = new google.maps.places.Autocomplete(originInput);
-  originAutocomplete.setFields(['place_id']);
-
-  var allhandlers = [handler1, handler2, handler3];
-  setupUnifiedPlaceChangedListener(originAutocomplete, allhandlers, 'ORIG');
-
-}
-
-function setupUnifiedPlaceChangedListener(autocomplete, handlers, mode) {
-  autocomplete.addListener('place_changed', function() {
-    var place = autocomplete.getPlace();
-
-    if (!place.place_id) {
-      window.alert('Please select an option from the dropdown list.');
-      return;
-    }
-    if (mode === 'ORIG') {
-      for(ix in handlers) {
-        handlers[ix].originPlaceId = place.place_id;
-      }
-    } else {
-      for(ix in handlers) {
-        handlers[ix].destinationPlaceId = place.place_id;
-      }
-    }
-    for(ix in handlers) {
-      handlers[ix].route();
-    }
-  });
-}
-
-
-/**
- * @constructor
- */
-function AutocompleteDirectionsHandler(map) {
-  this.map = map;
-  this.originPlaceId = null;
-  this.destinationPlaceId = null;
-  this.travelMode = 'WALKING';
-  this.directionsService = new google.maps.DirectionsService;
-  this.directionsDisplay = new google.maps.DirectionsRenderer;
-  this.directionsDisplay.setMap(map);
-
-  var destinationInput = document.getElementById('destination-input');
-  var modeSelector = document.getElementById('mode-selector');
-
-  var destinationAutocomplete =
-      new google.maps.places.Autocomplete(destinationInput);
-  // Specify just the place data fields that you need.
-  destinationAutocomplete.setFields(['place_id']);
-
-  this.setupClickListener('changemode-walking', 'WALKING');
-  this.setupClickListener('changemode-transit', 'TRANSIT');
-  this.setupClickListener('changemode-driving', 'DRIVING');
-
-  this.setupPlaceChangedListener(destinationAutocomplete, 'DEST');
-
-  // this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(originInput);
-  // this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(
-  //     destinationInput);
-  // this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(modeSelector);
-  return this;
-}
-
-// Sets a listener on a radio button to change the filter type on Places
-// Autocomplete.
-AutocompleteDirectionsHandler.prototype.setupClickListener = function(
-    id, mode) {
-  var radioButton = document.getElementById(id);
-  var me = this;
-
-  radioButton.addEventListener('click', function() {
-    me.travelMode = mode;
-    me.route();
-  });
-};
-
-AutocompleteDirectionsHandler.prototype.setupPlaceChangedListener = function(
-    autocomplete, mode) {
-  var me = this;
-
-  autocomplete.addListener('place_changed', function() {
-    var place = autocomplete.getPlace();
-
-    if (!place.place_id) {
-      window.alert('Please select an option from the dropdown list.');
-      return;
-    }
-    if (mode === 'ORIG') {
-      me.originPlaceId = place.place_id;
-    } else {
-      me.destinationPlaceId = place.place_id;
-    }
-    me.route();
-  });
-};
-
-AutocompleteDirectionsHandler.prototype.route = function() {
-  if (!this.originPlaceId || !this.destinationPlaceId) {
-    return;
-  }
-  var me = this;
-
-  this.directionsService.route(
-      {
-        origin: {'placeId': this.originPlaceId},
-        destination: {'placeId': this.destinationPlaceId},
-        travelMode: this.travelMode
-      },
-      function(response, status) {
-        if (status === 'OK') {
-          me.directionsDisplay.setDirections(response);
-        } else {
-          window.alert('Directions request failed due to ' + status);
+        // If full sentence has been displayed then start to delete the sentence after some time
+        if(text === _CONTENT[_PART]) {
+          clearInterval(_INTERVAL_VAL);
+          setTimeout(function() {
+            _INTERVAL_VAL = setInterval(Delete, 50);
+          }, 1000);
         }
-      });
+      }
 
-  /* API not responding */
-  // var parsedData;
-  // var unirest = require('unirest');
-  // unirest.get("https://crimescore.p.rapidapi.com/crimescore?f=json&id=174&lon=-85.679626&lat=38.08809")
-  // .header("X-RapidAPI-Host", "crimescore.p.rapidapi.com")
-  // .header("X-RapidAPI-Key", "81d0df96eamsh1c5cab223e6710ep1ae0c8jsnc61f4c5fc44f")
-  // .end(function (result) {
-  //  parsedData = JSON.parse[result.body];
-  //   console.log(result.status, result.headers, result.body);
-  // });
+      // Implements deleting effect
+      function Delete() {
+        var text =  _CONTENT[_PART].substring(0, _PART_INDEX - 1);
+        _ELEMENT.innerHTML = text;
+        _PART_INDEX--;
 
-var origin_ = {'placeId': this.originPlaceId};
-var destination_ = {'placeId': this.destinationPlaceId};
-var mode_ = this.travelMode;
-//var score = parsedData["score"];
+        // If sentence has been deleted then start to display the next sentence
+        if(text === '') {
+          clearInterval(_INTERVAL_VAL);
 
+          // If last sentence then display the first one, else move to the next
+          if(_PART == (_CONTENT.length - 1))
+            _PART = 0;
+          else
+            _PART++;
+          _PART_INDEX = 0;
 
-var service = new google.maps.DistanceMatrixService();
-  service.getDistanceMatrix({
-    origins: [origin_],
-    destinations: [destination_],
-    travelMode: mode_,
-    unitSystem: google.maps.UnitSystem.METRIC
-  }, function(response, status) {
-      if (status !== 'OK') {
-        alert('Error was: ' + status);
-      } else {
-            var originList = response.originAddresses;
-            var destinationList = response.destinationAddresses;
-            var outputDiv1 = document.getElementById('disText1');
-            var outputDiv2 = document.getElementById('disVal1');
-            var outputDiv3 = document.getElementById('timeText1');
-            var outputDiv4 = document.getElementById('timeVal1');
-            var outputDiv5 = document.getElementById('scoreText1');
-            var outputDiv6 = document.getElementById('scoreVal1');
-            var outputDiv7 = document.getElementById('gradeText1');
-            var outputDiv8 = document.getElementById('gradeVal1');
-            var results = response.rows[0].elements; 
-            outputDiv1.innerHTML = 'Distance ';
-            outputDiv2.innerHTML = results[0].distance.text;
-            outputDiv3.innerHTML = 'Travel Time ';
-            outputDiv4.innerHTML = results[0].duration.text;
-            // placeholder for now
-            outputDiv5.innerHTML = 'Crime Score ';
-            outputDiv7.innerHTML = 'Crime Grade';
-            if (mode_ == 'DRIVING')
-            {
-              outputDiv6.innerHTML = '  88';
-              outputDiv8.innerHTML = '  B+';
-            }
-            if (mode_ == 'WALKING')
-            {
-              outputDiv6.innerHTML = ' 74';
-              outputDiv8.innerHTML = ' C';
-            }
-            if (mode_ == 'TRANSIT')
-            {
-              outputDiv6.innerHTML = ' 79';
-              outputDiv8.innerHTML = ' C+';
-            }
-          }
-     });
-};
-
-
-
-
-
-function AutocompleteDirectionsHandler1(map) {
-  this.map = map;
-  this.originPlaceId = null;
-  this.destinationPlaceId = null;
-  this.travelMode = 'WALKING';
-  this.directionsService = new google.maps.DirectionsService;
-  this.directionsDisplay = new google.maps.DirectionsRenderer;
-  this.directionsDisplay.setMap(map);
-
-  var originInput = document.getElementById('unified-origin-input');
-  var destinationInput = document.getElementById('destination-input1');
-  var modeSelector = document.getElementById('mode-selector1');
-
-  var destinationAutocomplete =
-      new google.maps.places.Autocomplete(destinationInput);
-  // Specify just the place data fields that you need.
-  destinationAutocomplete.setFields(['place_id']);
-
-  this.setupClickListener('changemode-walking1', 'WALKING');
-  this.setupClickListener('changemode-transit1', 'TRANSIT');
-  this.setupClickListener('changemode-driving1', 'DRIVING');
-
-  this.setupPlaceChangedListener(destinationAutocomplete, 'DEST');
-
-  // this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(originInput);
-  // this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(
-  //     destinationInput);
-  // this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(modeSelector);
-}
-
-// Sets a listener on a radio button to change the filter type on Places
-// Autocomplete.
-AutocompleteDirectionsHandler1.prototype.setupClickListener = function(
-    id, mode) {
-  var radioButton = document.getElementById(id);
-  var me = this;
-
-  radioButton.addEventListener('click', function() {
-    me.travelMode = mode;
-    me.route();
-  });
-};
-
-AutocompleteDirectionsHandler1.prototype.setupPlaceChangedListener = function(
-    autocomplete, mode) {
-  var me = this;
-
-  autocomplete.addListener('place_changed', function() {
-    var place = autocomplete.getPlace();
-
-    if (!place.place_id) {
-      window.alert('Please select an option from the dropdown list.');
-      return;
-    }
-    if (mode === 'ORIG') {
-      me.originPlaceId = place.place_id;
-    } else {
-      me.destinationPlaceId = place.place_id;
-    }
-    me.route();
-  });
-};
-
-AutocompleteDirectionsHandler1.prototype.route = function() {
-  if (!this.originPlaceId || !this.destinationPlaceId) {
-    return;
-  }
-  var me = this;
-
-  this.directionsService.route(
-      {
-        origin: {'placeId': this.originPlaceId},
-        destination: {'placeId': this.destinationPlaceId},
-        travelMode: this.travelMode
-      },
-      function(response, status) {
-        if (status === 'OK') {
-          me.directionsDisplay.setDirections(response);
-        } else {
-          window.alert('Directions request failed due to ' + status);
+          // Start to display the next sentence after some time
+          setTimeout(function() {
+            _INTERVAL_VAL = setInterval(Type, 100);
+          }, 200);
         }
-      });
+      }
 
-var origin_ = {'placeId': this.originPlaceId};
-var destination_ = {'placeId': this.destinationPlaceId};
-var mode_ = this.travelMode;
-
-
-var service = new google.maps.DistanceMatrixService();
-  service.getDistanceMatrix({
-    origins: [origin_],
-    destinations: [destination_],
-    travelMode: mode_,
-    unitSystem: google.maps.UnitSystem.METRIC
-  }, function(response, status) {
-      if (status !== 'OK') {
-        alert('Error was: ' + status);
-      } else {
-            var originList = response.originAddresses;
-            var destinationList = response.destinationAddresses;
-            var outputDiv1 = document.getElementById('disText2');
-            var outputDiv2 = document.getElementById('disVal2');
-            var outputDiv3 = document.getElementById('timeText2');
-            var outputDiv4 = document.getElementById('timeVal2');
-            var outputDiv5 = document.getElementById('scoreText2');
-            var outputDiv6 = document.getElementById('scoreVal2');
-            var outputDiv7 = document.getElementById('gradeText2');
-            var outputDiv8 = document.getElementById('gradeVal2');
-            var results = response.rows[0].elements; 
-            outputDiv1.innerHTML = 'Distance ';
-            outputDiv2.innerHTML = results[0].distance.text;
-            outputDiv3.innerHTML = 'Travel Time ';
-            outputDiv4.innerHTML = results[0].duration.text;
-            // placeholder for now
-            outputDiv5.innerHTML = 'Crime Score ';
-            outputDiv7.innerHTML = 'Crime Grade';
-            if (mode_ == 'DRIVING')
-            {
-              outputDiv6.innerHTML = '  93';
-              outputDiv8.innerHTML = '  A-';
-            }
-            if (mode_ == 'WALKING')
-            {
-              outputDiv6.innerHTML = ' 86';
-              outputDiv8.innerHTML = ' B';
-            }
-            if (mode_ == 'TRANSIT')
-            {
-              outputDiv6.innerHTML = ' 83';
-              outputDiv8.innerHTML = ' B-';
-            }
-          }
+      // Start the typing effect on load
+      _INTERVAL_VAL = setInterval(Type, 100);
       
-     });
-};
-
-
-
-function AutocompleteDirectionsHandler2(map) {
-  this.map = map;
-  this.originPlaceId = null;
-  this.destinationPlaceId = null;
-  this.travelMode = 'WALKING';
-  this.directionsService = new google.maps.DirectionsService;
-  this.directionsDisplay = new google.maps.DirectionsRenderer;
-  this.directionsDisplay.setMap(map);
-
-  var originInput = document.getElementById('origin-input2');
-  var destinationInput = document.getElementById('destination-input2');
-  var modeSelector = document.getElementById('mode-selector2');
-
-  var destinationAutocomplete =
-      new google.maps.places.Autocomplete(destinationInput);
-  // Specify just the place data fields that you need.
-  destinationAutocomplete.setFields(['place_id']);
-
-  this.setupClickListener('changemode-walking2', 'WALKING');
-  this.setupClickListener('changemode-transit2', 'TRANSIT');
-  this.setupClickListener('changemode-driving2', 'DRIVING');
-
-  this.setupPlaceChangedListener(destinationAutocomplete, 'DEST');
-
-  // this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(originInput);
-  // this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(
-  //     destinationInput);
-  // this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(modeSelector);
-}
-
-// Sets a listener on a radio button to change the filter type on Places
-// Autocomplete.
-AutocompleteDirectionsHandler2.prototype.setupClickListener = function(
-    id, mode) {
-  var radioButton = document.getElementById(id);
-  var me = this;
-
-  radioButton.addEventListener('click', function() {
-    me.travelMode = mode;
-    me.route();
-  });
-};
-
-AutocompleteDirectionsHandler2.prototype.setupPlaceChangedListener = function(
-    autocomplete, mode) {
-  var me = this;
-
-  autocomplete.addListener('place_changed', function() {
-    var place = autocomplete.getPlace();
-
-    if (!place.place_id) {
-      window.alert('Please select an option from the dropdown list.');
-      return;
-    }
-    if (mode === 'ORIG') {
-      me.originPlaceId = place.place_id;
-    } else {
-      me.destinationPlaceId = place.place_id;
-    }
-    me.route();
-  });
-};
-
-AutocompleteDirectionsHandler2.prototype.route = function() {
-  if (!this.originPlaceId || !this.destinationPlaceId) {
-    return;
-  }
-  var me = this;
-
-  this.directionsService.route(
-      {
-        origin: {'placeId': this.originPlaceId},
-        destination: {'placeId': this.destinationPlaceId},
-        travelMode: this.travelMode
-      },
-      function(response, status) {
-        if (status === 'OK') {
-          me.directionsDisplay.setDirections(response);
-        } else {
-          window.alert('Directions request failed due to ' + status);
+      // The sticky navbar
+      $(document).ready(function() {
+    
+      $(window).scroll(function () {
+          //if you hard code, then use console
+          //.log to determine when you want the 
+          //nav bar to stick.  
+          console.log($(window).scrollTop())
+        if ($(window).scrollTop() > 665) {
+          $('#nav-float').addClass('sticky');
+          $('#nav-float1').addClass('sticky');
+          $('#nav-float2').addClass('sticky');
+        }
+        if ($(window).scrollTop() < 665) {
+          $('#nav-float').removeClass('sticky');
+          $('#nav-float1').removeClass('sticky');
+          $('#nav-float2').removeClass('sticky');
         }
       });
+    });
 
-var origin_ = {'placeId': this.originPlaceId};
-var destination_ = {'placeId': this.destinationPlaceId};
-var mode_ = this.travelMode;
+    function initMap() {
+      var map = new google.maps.Map(document.getElementById('map'), {
+        mapTypeControl: false,
+        center: {lat: -33.8688, lng: 151.2195},
+        zoom: 13
+      });
+
+      var handler1 = new AutocompleteDirectionsHandler(map);
+
+      var map1 = new google.maps.Map(document.getElementById('map1'), {
+        mapTypeControl: false,
+        center: {lat:  37.423021, lng: -122.083739},
+        zoom: 13
+      });
+
+      var handler2 = new AutocompleteDirectionsHandler1(map1);
 
 
-var service = new google.maps.DistanceMatrixService();
-  service.getDistanceMatrix({
-    origins: [origin_],
-    destinations: [destination_],
-    travelMode: mode_,
-    unitSystem: google.maps.UnitSystem.METRIC
-  }, function(response, status) {
-      if (status !== 'OK') {
-        alert('Error was: ' + status);
-      } else {
-            var originList = response.originAddresses;
-            var destinationList = response.destinationAddresses;
-            var outputDiv1 = document.getElementById('disText3');
-            var outputDiv2 = document.getElementById('disVal3');
-            var outputDiv3 = document.getElementById('timeText3');
-            var outputDiv4 = document.getElementById('timeVal3');
-            var outputDiv5 = document.getElementById('scoreText3');
-            var outputDiv6 = document.getElementById('scoreVal3');
-            var outputDiv7 = document.getElementById('gradeText3');
-            var outputDiv8 = document.getElementById('gradeVal3');
-            var results = response.rows[0].elements; 
-            outputDiv1.innerHTML = 'Distance ';
-            outputDiv2.innerHTML = results[0].distance.text;
-            outputDiv3.innerHTML = 'Travel Time ';
-            outputDiv4.innerHTML = results[0].duration.text;
-            // placeholder for now
-            outputDiv5.innerHTML = 'Crime Score ';
-            outputDiv7.innerHTML = 'Crime Grade';
-            if (mode_ == 'DRIVING')
-            {
-              outputDiv6.innerHTML = '  91';
-              outputDiv8.innerHTML = '  A-';
-            }
-            if (mode_ == 'WALKING')
-            {
-              outputDiv6.innerHTML = ' 84';
-              outputDiv8.innerHTML = ' B';
-            }
-            if (mode_ == 'TRANSIT')
-            {
-              outputDiv6.innerHTML = ' 85';
-              outputDiv8.innerHTML = ' B';
-            }
+      var map2 = new google.maps.Map(document.getElementById('map2'), {
+      mapTypeControl: false,
+      center: {lat:  37.423021, lng: -122.083739},
+      zoom: 13
+      });
+
+      var handler3 = new AutocompleteDirectionsHandler2(map2);
+
+      var originInput = document.getElementById('unified-origin-input');
+      var originAutocomplete = new google.maps.places.Autocomplete(originInput);
+      originAutocomplete.setFields(['place_id']);
+
+      var allhandlers = [handler1, handler2, handler3];
+      setupUnifiedPlaceChangedListener(originAutocomplete, allhandlers, 'ORIG');
+
+    }
+
+    function setupUnifiedPlaceChangedListener(autocomplete, handlers, mode) {
+      autocomplete.addListener('place_changed', function() {
+        var place = autocomplete.getPlace();
+
+        if (!place.place_id) {
+          window.alert('Please select an option from the dropdown list.');
+          return;
+        }
+        if (mode === 'ORIG') {
+          for(ix in handlers) {
+            handlers[ix].originPlaceId = place.place_id;
           }
-     });
-};
+        } else {
+          for(ix in handlers) {
+            handlers[ix].destinationPlaceId = place.place_id;
+          }
+        }
+        for(ix in handlers) {
+          handlers[ix].route();
+        }
+      });
+    }
+
+
+    /**
+     * @constructor
+     */
+    function AutocompleteDirectionsHandler(map) {
+      this.map = map;
+      this.originPlaceId = null;
+      this.destinationPlaceId = null;
+      this.travelMode = 'WALKING';
+      this.directionsService = new google.maps.DirectionsService;
+      this.directionsDisplay = new google.maps.DirectionsRenderer;
+      this.directionsDisplay.setMap(map);
+
+      var destinationInput = document.getElementById('destination-input');
+      var modeSelector = document.getElementById('mode-selector');
+
+      var destinationAutocomplete =
+          new google.maps.places.Autocomplete(destinationInput);
+      // Specify just the place data fields that you need.
+      destinationAutocomplete.setFields(['place_id']);
+
+      this.setupClickListener('changemode-walking', 'WALKING');
+      this.setupClickListener('changemode-transit', 'TRANSIT');
+      this.setupClickListener('changemode-driving', 'DRIVING');
+
+      this.setupPlaceChangedListener(destinationAutocomplete, 'DEST');
+
+      // this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(originInput);
+      // this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(
+      //     destinationInput);
+      // this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(modeSelector);
+      return this;
+    }
+
+    // Sets a listener on a radio button to change the filter type on Places
+    // Autocomplete.
+    AutocompleteDirectionsHandler.prototype.setupClickListener = function(
+        id, mode) {
+      var radioButton = document.getElementById(id);
+      var me = this;
+
+      radioButton.addEventListener('click', function() {
+        me.travelMode = mode;
+        me.route();
+      });
+    };
+
+    AutocompleteDirectionsHandler.prototype.setupPlaceChangedListener = function(
+        autocomplete, mode) {
+      var me = this;
+
+      autocomplete.addListener('place_changed', function() {
+        var place = autocomplete.getPlace();
+
+        if (!place.place_id) {
+          window.alert('Please select an option from the dropdown list.');
+          return;
+        }
+        if (mode === 'ORIG') {
+          me.originPlaceId = place.place_id;
+        } else {
+          me.destinationPlaceId = place.place_id;
+        }
+        me.route();
+      });
+    };
+
+    AutocompleteDirectionsHandler.prototype.route = function() {
+      if (!this.originPlaceId || !this.destinationPlaceId) {
+        return;
+      }
+      var me = this;
+
+      this.directionsService.route(
+          {
+            origin: {'placeId': this.originPlaceId},
+            destination: {'placeId': this.destinationPlaceId},
+            travelMode: this.travelMode
+          },
+          function(response, status) {
+            if (status === 'OK') {
+              me.directionsDisplay.setDirections(response);
+            } else {
+              window.alert('Directions request failed due to ' + status);
+            }
+          });
+
+
+    var origin_ = {'placeId': this.originPlaceId};
+    var destination_ = {'placeId': this.destinationPlaceId};
+    var mode_ = this.travelMode;
+    //var score = parsedData["score"];
+
+
+    var service = new google.maps.DistanceMatrixService();
+      service.getDistanceMatrix({
+        origins: [origin_],
+        destinations: [destination_],
+        travelMode: mode_,
+        unitSystem: google.maps.UnitSystem.METRIC
+      }, function(response, status) {
+          if (status !== 'OK') {
+            alert('Error was: ' + status);
+          } else {
+                var originList = response.originAddresses;
+                var destinationList = response.destinationAddresses;
+                var outputDiv1 = document.getElementById('disText1');
+                var outputDiv2 = document.getElementById('disVal1');
+                var outputDiv3 = document.getElementById('timeText1');
+                var outputDiv4 = document.getElementById('timeVal1');
+                var outputDiv5 = document.getElementById('scoreText1');
+                var outputDiv6 = document.getElementById('scoreVal1');
+                var outputDiv7 = document.getElementById('gradeText1');
+                var outputDiv8 = document.getElementById('gradeVal1');
+                var results = response.rows[0].elements; 
+                outputDiv1.innerHTML = 'Distance ';
+                outputDiv2.innerHTML = results[0].distance.text;
+                outputDiv3.innerHTML = 'Travel Time ';
+                outputDiv4.innerHTML = results[0].duration.text;
+                // placeholder for now
+                outputDiv5.innerHTML = 'Crime Score ';
+                outputDiv7.innerHTML = 'Crime Grade';
+                if (mode_ == 'DRIVING')
+                {
+                  outputDiv6.innerHTML = '  88';
+                  outputDiv8.innerHTML = '  B+';
+                }
+                if (mode_ == 'WALKING')
+                {
+                  outputDiv6.innerHTML = ' 74';
+                  outputDiv8.innerHTML = ' C';
+                }
+                if (mode_ == 'TRANSIT')
+                {
+                  outputDiv6.innerHTML = ' 79';
+                  outputDiv8.innerHTML = ' C+';
+                }
+              }
+         });
+    };
+
+
+
+
+
+    function AutocompleteDirectionsHandler1(map) {
+      this.map = map;
+      this.originPlaceId = null;
+      this.destinationPlaceId = null;
+      this.travelMode = 'WALKING';
+      this.directionsService = new google.maps.DirectionsService;
+      this.directionsDisplay = new google.maps.DirectionsRenderer;
+      this.directionsDisplay.setMap(map);
+
+      var originInput = document.getElementById('unified-origin-input');
+      var destinationInput = document.getElementById('destination-input1');
+      var modeSelector = document.getElementById('mode-selector1');
+
+      var destinationAutocomplete =
+          new google.maps.places.Autocomplete(destinationInput);
+      // Specify just the place data fields that you need.
+      destinationAutocomplete.setFields(['place_id']);
+
+      this.setupClickListener('changemode-walking1', 'WALKING');
+      this.setupClickListener('changemode-transit1', 'TRANSIT');
+      this.setupClickListener('changemode-driving1', 'DRIVING');
+
+      this.setupPlaceChangedListener(destinationAutocomplete, 'DEST');
+
+      // this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(originInput);
+      // this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(
+      //     destinationInput);
+      // this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(modeSelector);
+    }
+
+    // Sets a listener on a radio button to change the filter type on Places
+    // Autocomplete.
+    AutocompleteDirectionsHandler1.prototype.setupClickListener = function(
+        id, mode) {
+      var radioButton = document.getElementById(id);
+      var me = this;
+
+      radioButton.addEventListener('click', function() {
+        me.travelMode = mode;
+        me.route();
+      });
+    };
+
+    AutocompleteDirectionsHandler1.prototype.setupPlaceChangedListener = function(
+        autocomplete, mode) {
+      var me = this;
+
+      autocomplete.addListener('place_changed', function() {
+        var place = autocomplete.getPlace();
+
+        if (!place.place_id) {
+          window.alert('Please select an option from the dropdown list.');
+          return;
+        }
+        if (mode === 'ORIG') {
+          me.originPlaceId = place.place_id;
+        } else {
+          me.destinationPlaceId = place.place_id;
+        }
+        me.route();
+      });
+    };
+
+    AutocompleteDirectionsHandler1.prototype.route = function() {
+      if (!this.originPlaceId || !this.destinationPlaceId) {
+        return;
+      }
+      var me = this;
+
+      this.directionsService.route(
+          {
+            origin: {'placeId': this.originPlaceId},
+            destination: {'placeId': this.destinationPlaceId},
+            travelMode: this.travelMode
+          },
+          function(response, status) {
+            if (status === 'OK') {
+              me.directionsDisplay.setDirections(response);
+            } else {
+              window.alert('Directions request failed due to ' + status);
+            }
+          });
+
+    var origin_ = {'placeId': this.originPlaceId};
+    var destination_ = {'placeId': this.destinationPlaceId};
+    var mode_ = this.travelMode;
+
+
+    var service = new google.maps.DistanceMatrixService();
+      service.getDistanceMatrix({
+        origins: [origin_],
+        destinations: [destination_],
+        travelMode: mode_,
+        unitSystem: google.maps.UnitSystem.METRIC
+      }, function(response, status) {
+          if (status !== 'OK') {
+            alert('Error was: ' + status);
+          } else {
+                var originList = response.originAddresses;
+                var destinationList = response.destinationAddresses;
+                var outputDiv1 = document.getElementById('disText2');
+                var outputDiv2 = document.getElementById('disVal2');
+                var outputDiv3 = document.getElementById('timeText2');
+                var outputDiv4 = document.getElementById('timeVal2');
+                var outputDiv5 = document.getElementById('scoreText2');
+                var outputDiv6 = document.getElementById('scoreVal2');
+                var outputDiv7 = document.getElementById('gradeText2');
+                var outputDiv8 = document.getElementById('gradeVal2');
+                var results = response.rows[0].elements; 
+                outputDiv1.innerHTML = 'Distance ';
+                outputDiv2.innerHTML = results[0].distance.text;
+                outputDiv3.innerHTML = 'Travel Time ';
+                outputDiv4.innerHTML = results[0].duration.text;
+                // placeholder for now
+                outputDiv5.innerHTML = 'Crime Score ';
+                outputDiv7.innerHTML = 'Crime Grade';
+                if (mode_ == 'DRIVING')
+                {
+                  outputDiv6.innerHTML = '  93';
+                  outputDiv8.innerHTML = '  A-';
+                }
+                if (mode_ == 'WALKING')
+                {
+                  outputDiv6.innerHTML = ' 86';
+                  outputDiv8.innerHTML = ' B';
+                }
+                if (mode_ == 'TRANSIT')
+                {
+                  outputDiv6.innerHTML = ' 83';
+                  outputDiv8.innerHTML = ' B-';
+                }
+              }
+          
+         });
+    };
+
+
+
+    function AutocompleteDirectionsHandler2(map) {
+      this.map = map;
+      this.originPlaceId = null;
+      this.destinationPlaceId = null;
+      this.travelMode = 'WALKING';
+      this.directionsService = new google.maps.DirectionsService;
+      this.directionsDisplay = new google.maps.DirectionsRenderer;
+      this.directionsDisplay.setMap(map);
+
+      var originInput = document.getElementById('origin-input2');
+      var destinationInput = document.getElementById('destination-input2');
+      var modeSelector = document.getElementById('mode-selector2');
+
+      var destinationAutocomplete =
+          new google.maps.places.Autocomplete(destinationInput);
+      // Specify just the place data fields that you need.
+      destinationAutocomplete.setFields(['place_id']);
+
+      this.setupClickListener('changemode-walking2', 'WALKING');
+      this.setupClickListener('changemode-transit2', 'TRANSIT');
+      this.setupClickListener('changemode-driving2', 'DRIVING');
+
+      this.setupPlaceChangedListener(destinationAutocomplete, 'DEST');
+
+      // this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(originInput);
+      // this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(
+      //     destinationInput);
+      // this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(modeSelector);
+    }
+
+    // Sets a listener on a radio button to change the filter type on Places
+    // Autocomplete.
+    AutocompleteDirectionsHandler2.prototype.setupClickListener = function(
+        id, mode) {
+      var radioButton = document.getElementById(id);
+      var me = this;
+
+      radioButton.addEventListener('click', function() {
+        me.travelMode = mode;
+        me.route();
+      });
+    };
+
+    AutocompleteDirectionsHandler2.prototype.setupPlaceChangedListener = function(
+        autocomplete, mode) {
+      var me = this;
+
+      autocomplete.addListener('place_changed', function() {
+        var place = autocomplete.getPlace();
+
+        if (!place.place_id) {
+          window.alert('Please select an option from the dropdown list.');
+          return;
+        }
+        if (mode === 'ORIG') {
+          me.originPlaceId = place.place_id;
+        } else {
+          me.destinationPlaceId = place.place_id;
+        }
+        me.route();
+      });
+    };
+
+    AutocompleteDirectionsHandler2.prototype.route = function() {
+      if (!this.originPlaceId || !this.destinationPlaceId) {
+        return;
+      }
+      var me = this;
+
+      this.directionsService.route(
+          {
+            origin: {'placeId': this.originPlaceId},
+            destination: {'placeId': this.destinationPlaceId},
+            travelMode: this.travelMode
+          },
+          function(response, status) {
+            if (status === 'OK') {
+              me.directionsDisplay.setDirections(response);
+            } else {
+              window.alert('Directions request failed due to ' + status);
+            }
+          });
+
+    var origin_ = {'placeId': this.originPlaceId};
+    var destination_ = {'placeId': this.destinationPlaceId};
+    var mode_ = this.travelMode;
+
+
+    var service = new google.maps.DistanceMatrixService();
+      service.getDistanceMatrix({
+        origins: [origin_],
+        destinations: [destination_],
+        travelMode: mode_,
+        unitSystem: google.maps.UnitSystem.METRIC
+      }, function(response, status) {
+          if (status !== 'OK') {
+            alert('Error was: ' + status);
+          } else {
+                var originList = response.originAddresses;
+                var destinationList = response.destinationAddresses;
+                var outputDiv1 = document.getElementById('disText3');
+                var outputDiv2 = document.getElementById('disVal3');
+                var outputDiv3 = document.getElementById('timeText3');
+                var outputDiv4 = document.getElementById('timeVal3');
+                var outputDiv5 = document.getElementById('scoreText3');
+                var outputDiv6 = document.getElementById('scoreVal3');
+                var outputDiv7 = document.getElementById('gradeText3');
+                var outputDiv8 = document.getElementById('gradeVal3');
+                var results = response.rows[0].elements; 
+                outputDiv1.innerHTML = 'Distance ';
+                outputDiv2.innerHTML = results[0].distance.text;
+                outputDiv3.innerHTML = 'Travel Time ';
+                outputDiv4.innerHTML = results[0].duration.text;
+                // placeholder for now
+                outputDiv5.innerHTML = 'Crime Score ';
+                outputDiv7.innerHTML = 'Crime Grade';
+                if (mode_ == 'DRIVING')
+                {
+                  outputDiv6.innerHTML = '  91';
+                  outputDiv8.innerHTML = '  A-';
+                }
+                if (mode_ == 'WALKING')
+                {
+                  outputDiv6.innerHTML = ' 84';
+                  outputDiv8.innerHTML = ' B';
+                }
+                if (mode_ == 'TRANSIT')
+                {
+                  outputDiv6.innerHTML = ' 85';
+                  outputDiv8.innerHTML = ' B';
+                }
+              }
+         });
+    };
 
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDiB83_sxJcvbvcVjgYzA7ANGtpJTUx10M&libraries=places&callback=initMap"
