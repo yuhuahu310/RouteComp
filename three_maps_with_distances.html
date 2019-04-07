@@ -101,6 +101,7 @@
         margin-bottom: 12px;
         padding: 5px 11px 0px 11px;
         border-radius: 10px;
+        width: 350px;
       }
 
       #mode-selector label,
@@ -125,11 +126,11 @@
       #disVal1, #disVal2, #disVal3,
       #timeVal1, #timeVal2, #timeVal3,
       #scoreVal1, #scoreVal2, #scoreVal3,
-      #gradeVal1, #gradeVal2, #gradeVal3,{
+      #gradeVal1, #gradeVal2, #gradeVal3{
         font-size:20px;
         text-align: center;
         margin: 0px auto;
-        height: 100px;
+        height: 100px; 
         line-height: 100px;
       }
  
@@ -198,7 +199,13 @@
       #map2 {
         animation: fadein 8s;
       }
-
+     
+     .sticky {
+        position: fixed;
+        top: 0;
+        z-index: 1;
+        width: 100%;
+      }
 
 
     </style>
@@ -239,7 +246,7 @@
     </div>
       <div class="row">
         <div class="col-lg-4">
-          <div>
+          <div id="nav-float">
               <input id="destination-input" class="controls" type="text"
                   placeholder="Enter a destination location">
 
@@ -259,7 +266,7 @@
         </div>
 
         <div class="col-lg-4">
-          <div>
+          <div id="nav-float1">
               <input id="destination-input1" class="controls" type="text"
                   placeholder="Enter a destination location">
 
@@ -280,7 +287,7 @@
         </div>
 
         <div class="col-lg-4">
-          <div>
+          <div id="nav-float2">
               <input id="destination-input2" class="controls origin-input" type="text"
                   placeholder="Enter a destination location">
 
@@ -407,7 +414,25 @@
 // parameter when you first load the API. For example:
 // <script
 // src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
-
+$(document).ready(function() {
+  
+  $(window).scroll(function () {
+      //if you hard code, then use console
+      //.log to determine when you want the 
+      //nav bar to stick.  
+      console.log($(window).scrollTop())
+    if ($(window).scrollTop() > 665) {
+      $('#nav-float').addClass('sticky');
+      $('#nav-float1').addClass('sticky');
+      $('#nav-float2').addClass('sticky');
+    }
+    if ($(window).scrollTop() < 665) {
+      $('#nav-float').removeClass('sticky');
+      $('#nav-float1').removeClass('sticky');
+      $('#nav-float2').removeClass('sticky');
+    }
+  });
+});
 
 function initMap() {
   var map = new google.maps.Map(document.getElementById('map'), {
