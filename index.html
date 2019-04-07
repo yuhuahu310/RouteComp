@@ -191,8 +191,10 @@ AutocompleteDirectionsHandler.prototype.route = function() {
         }
       });
 
-var origin_ = new google.maps.LatLng(-27.5970141,-48.5614466);
-  var destination_ = new google.maps.LatLng(-27.5927353,-48.5556316);
+var origin_ = {'placeId': this.originPlaceId};
+var destination_ = {'placeId': this.destinationPlaceId};
+//var origin_ = new google.maps.LatLng(-27.5970141,-48.5614466);
+  //var destination_ = new google.maps.LatLng(-27.5927353,-48.5556316);
   // var origin_ = this.originPlaceId;
   // var destination_ = this.destinationPlaceId;
 
