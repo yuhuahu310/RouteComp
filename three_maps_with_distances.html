@@ -476,15 +476,28 @@ AutocompleteDirectionsHandler.prototype.route = function() {
         }
       });
 
+  /* API not responding */
+  // var parsedData;
+  // var unirest = require('unirest');
+  // unirest.get("https://crimescore.p.rapidapi.com/crimescore?f=json&id=174&lon=-85.679626&lat=38.08809")
+  // .header("X-RapidAPI-Host", "crimescore.p.rapidapi.com")
+  // .header("X-RapidAPI-Key", "81d0df96eamsh1c5cab223e6710ep1ae0c8jsnc61f4c5fc44f")
+  // .end(function (result) {
+  //  parsedData = JSON.parse[result.body];
+  //   console.log(result.status, result.headers, result.body);
+  // });
+
 var origin_ = {'placeId': this.originPlaceId};
 var destination_ = {'placeId': this.destinationPlaceId};
+var mode_ = this.travelMode;
+//var score = parsedData["score"];
 
 
 var service = new google.maps.DistanceMatrixService();
   service.getDistanceMatrix({
     origins: [origin_],
     destinations: [destination_],
-    travelMode: this.travelMode,
+    travelMode: mode_,
     unitSystem: google.maps.UnitSystem.METRIC
   }, function(response, status) {
       if (status !== 'OK') {
@@ -497,6 +510,22 @@ var service = new google.maps.DistanceMatrixService();
             var results = response.rows[0].elements; 
             outputDiv.innerHTML = results[0].distance.text;
             outputDivT.innerHTML = results[0].duration.text;
+            // placeholder for now
+            if (mode_ == 'DRIVING')
+            {
+              outputDiv.innerHTML += '   Score: 88';
+              outputDiv.innerHTML += '   Grade: B+';
+            }
+            if (mode_ == 'WALKING')
+            {
+              outputDiv.innerHTML += '   Score: 74';
+              outputDiv.innerHTML += '   Grade: C';
+            }
+            if (mode_ == 'TRANSIT')
+            {
+              outputDiv.innerHTML += '   Score: 79';
+              outputDiv.innerHTML += '   Grade: C+';
+            }
           }
      });
 };
@@ -590,13 +619,14 @@ AutocompleteDirectionsHandler1.prototype.route = function() {
 
 var origin_ = {'placeId': this.originPlaceId};
 var destination_ = {'placeId': this.destinationPlaceId};
+var mode_ = this.travelMode;
 
 
 var service = new google.maps.DistanceMatrixService();
   service.getDistanceMatrix({
     origins: [origin_],
     destinations: [destination_],
-    travelMode: this.travelMode,
+    travelMode: mode_,
     unitSystem: google.maps.UnitSystem.METRIC
   }, function(response, status) {
       if (status !== 'OK') {
@@ -610,6 +640,23 @@ var service = new google.maps.DistanceMatrixService();
             outputDiv.innerHTML = results[0].distance.text;
             outputDivT.innerHTML = results[0].duration.text;
           }
+
+          // placeholder for now
+            if (mode_ == 'DRIVING')
+            {
+              outputDiv.innerHTML += '   Score: 93';
+              outputDiv.innerHTML += '   Grade: A-';
+            }
+            if (mode_ == 'WALKING')
+            {
+              outputDiv.innerHTML += '   Score: 86';
+              outputDiv.innerHTML += '   Grade: B';
+            }
+            if (mode_ == 'TRANSIT')
+            {
+              outputDiv.innerHTML += '   Score: 83';
+              outputDiv.innerHTML += '   Grade: B-';
+            }
      });
 };
 
@@ -700,13 +747,14 @@ AutocompleteDirectionsHandler2.prototype.route = function() {
 
 var origin_ = {'placeId': this.originPlaceId};
 var destination_ = {'placeId': this.destinationPlaceId};
+var mode_ = this.travelMode;
 
 
 var service = new google.maps.DistanceMatrixService();
   service.getDistanceMatrix({
     origins: [origin_],
     destinations: [destination_],
-    travelMode: this.travelMode,
+    travelMode: mode_,
     unitSystem: google.maps.UnitSystem.METRIC
   }, function(response, status) {
       if (status !== 'OK') {
@@ -720,6 +768,23 @@ var service = new google.maps.DistanceMatrixService();
             outputDiv.innerHTML = results[0].distance.text;
             outputDivT.innerHTML = results[0].duration.text;
           }
+
+          // placeholder for now
+            if (mode_ == 'DRIVING')
+            {
+              outputDiv.innerHTML += '   Score: 91';
+              outputDiv.innerHTML += '   Grade: A-';
+            }
+            if (mode_ == 'WALKING')
+            {
+              outputDiv.innerHTML += '   Score: 84';
+              outputDiv.innerHTML += '   Grade: B';
+            }
+            if (mode_ == 'TRANSIT')
+            {
+              outputDiv.innerHTML += '   Score: 85';
+              outputDiv.innerHTML += '   Grade: B';
+            }
      });
 };
 
