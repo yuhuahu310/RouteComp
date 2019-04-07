@@ -39,7 +39,7 @@
                      0px 18px 23px rgba(0,0,0,0.1);
       }
 
-      hr {
+      #for-header{
           width: 400px;
           border-top: 1px solid #f8f8f8;
           border-bottom: 1px solid rgba(0,0,0,0.2);
@@ -111,27 +111,22 @@
         font-weight: 300;
       }
 
-      #output{
+      #output, #output1, #output2{
         font-size:20px;
+        text-align: center;
+        margin: 0px auto;
+        height: 100px;
+        line-height: 100px;
       }
-      #output1{
-        font-style:20px;
-      }
-      #output2{
-        font-style:20px;
-      }
-      #outputT{
+
+      #outputT, #output1T, #output2T{
         font-size:20px;
+        text-align: center;
+        margin: 0px auto;
+        height: 100px;
+        line-height: 100px;
       }
-      #output1T{
-        font-style:20px;
-      }
-      #output2T{
-        font-style:20px;
-      }
-
-
-
+ 
       #unified-origin-input{
         background-color: #fff;
         font-family: Roboto;
@@ -154,19 +149,17 @@
         color: #696969;
       }
 
-      #last_line
-      {
-        margin: 0px;
-      }
-
       #footer
       {
         text-align: center;
         background-color: #383F51;
         color: #FFF;
-        height: 30px;
-        line-height: 30px;
-        font-size: 0.8em;
+        height: 35px;
+      }
+
+      #footer p{
+        line-height: 35px;
+        margin: 0px;
       }
 
       .search{
@@ -183,7 +176,7 @@
               <div class="content">
                 <h1>RouteKeeper</h1>
                 <h3>The Only Human-Feline Dating Website</h3>
-                <hr>
+                <hr id="for-header">
                 <button class="btn btn-default btn-lg"><a href="three_maps_with_distances.html#origin-btn">Get Started!</a></button>
               </div>
             </div>
@@ -228,8 +221,6 @@
           </div>
 
           <div id="map"></div>
-          <div id="output"></div>
-          <div id="outputT"></div>
         </div>
 
         <div class="col-lg-4">
@@ -250,8 +241,7 @@
           </div>
 
           <div id="map1"></div>
-          <div id="output1"></div>
-          <div id="output1T"></div>
+
         </div>
 
         <div class="col-lg-4">
@@ -272,14 +262,37 @@
           </div>
 
           <div id="map2"></div>
-          <div id="output2"></div>
-          <div id="output2T"></div>
+
         </div>
       </div> <!-- div class="row"-->
 
+      <div class="row">
+        <div class="col-lg-4">
+          <div id="output"></div>
+        </div>
+        <div class="col-lg-4">
+          <div id="output1"></div>
+        </div>
+        <div class="col-lg-4">
+          <div id="output2"></div>
+        </div>
+      </div><!-- div class="row"-->
+
+      <div class="row">
+        <div class="col-lg-4">
+          <div id="outputT"></div>
+        </div>
+        <div class="col-lg-4">
+          <div id="output1T"></div>
+        </div>
+        <div class="col-lg-4">
+          <div id="output2T"></div>
+        </div>
+      </div><!-- div class="row"-->
+
   </div><!-- div class="container" -->
 
-  <div id="footer"> <p id="last_line"> Xiaoyang Qiao | Yuhua Hu | Blair Niu &copy; 2019 </p> </div>
+  <div id="footer"> <p> Xiaoyang Qiao | Yuhua Hu | Blair Niu &copy; 2019 </p> </div>
 
 
     <script>
