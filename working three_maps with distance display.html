@@ -624,7 +624,7 @@ var service = new google.maps.DistanceMatrixService();
             outputDiv.innerHTML = 'Distance:';
             var results = response.rows[0].elements; 
             outputDiv.innerHTML += results[0].distance.text;
-            outputDiv.innerHTML += '   Time:'
+            outputDiv.innerHTML += ' Time:'
             outputDiv.innerHTML += results[0].duration.text;
           }
      });

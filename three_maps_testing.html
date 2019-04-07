@@ -136,6 +136,15 @@
       .controls.origin-input {
         /*visibility: hidden;*/
       }
+      #output{
+        font-size:20px;
+      }
+      #output1{
+        font-style:20px;
+      }
+      #output2{
+        font-style:20px;
+      }
 
     </style>
   </head>
@@ -167,6 +176,7 @@
           </div>
 
           <div id="map"></div>
+          <div id="output"></div>
         </div>
 
         <div class="col-lg-4">
@@ -187,6 +197,7 @@
           </div>
 
           <div id="map1"></div>
+          <div id="output1"></div>
         </div>
 
         <div class="col-lg-4">
@@ -207,7 +218,7 @@
           </div>
 
           <div id="map2"></div>
-
+          <div id="output2"></div>
         </div>
       </div> <!-- div class="row"-->
 
@@ -364,6 +375,31 @@ AutocompleteDirectionsHandler.prototype.route = function() {
           window.alert('Directions request failed due to ' + status);
         }
       });
+
+var origin_ = {'placeId': this.originPlaceId};
+var destination_ = {'placeId': this.destinationPlaceId};
+
+
+var service = new google.maps.DistanceMatrixService();
+  service.getDistanceMatrix({
+    origins: [origin_],
+    destinations: [destination_],
+    travelMode: this.travelMode,
+    unitSystem: google.maps.UnitSystem.METRIC
+  }, function(response, status) {
+      if (status !== 'OK') {
+        alert('Error was: ' + status);
+      } else {
+            var originList = response.originAddresses;
+            var destinationList = response.destinationAddresses;
+            var outputDiv = document.getElementById('output');
+            outputDiv.innerHTML = 'Distance:';
+            var results = response.rows[0].elements; 
+            outputDiv.innerHTML += results[0].distance.text;
+            outputDiv.innerHTML += '   Time:'
+            outputDiv.innerHTML += results[0].duration.text;
+          }
+     });
 };
 
 
@@ -452,6 +488,31 @@ AutocompleteDirectionsHandler1.prototype.route = function() {
           window.alert('Directions request failed due to ' + status);
         }
       });
+
+var origin_ = {'placeId': this.originPlaceId};
+var destination_ = {'placeId': this.destinationPlaceId};
+
+
+var service = new google.maps.DistanceMatrixService();
+  service.getDistanceMatrix({
+    origins: [origin_],
+    destinations: [destination_],
+    travelMode: this.travelMode,
+    unitSystem: google.maps.UnitSystem.METRIC
+  }, function(response, status) {
+      if (status !== 'OK') {
+        alert('Error was: ' + status);
+      } else {
+            var originList = response.originAddresses;
+            var destinationList = response.destinationAddresses;
+            var outputDiv = document.getElementById('output1');
+            outputDiv.innerHTML = 'Distance:';
+            var results = response.rows[0].elements; 
+            outputDiv.innerHTML += results[0].distance.text;
+            outputDiv.innerHTML += '   Time:'
+            outputDiv.innerHTML += results[0].duration.text;
+          }
+     });
 };
 
 
@@ -538,6 +599,31 @@ AutocompleteDirectionsHandler2.prototype.route = function() {
           window.alert('Directions request failed due to ' + status);
         }
       });
+
+var origin_ = {'placeId': this.originPlaceId};
+var destination_ = {'placeId': this.destinationPlaceId};
+
+
+var service = new google.maps.DistanceMatrixService();
+  service.getDistanceMatrix({
+    origins: [origin_],
+    destinations: [destination_],
+    travelMode: this.travelMode,
+    unitSystem: google.maps.UnitSystem.METRIC
+  }, function(response, status) {
+      if (status !== 'OK') {
+        alert('Error was: ' + status);
+      } else {
+            var originList = response.originAddresses;
+            var destinationList = response.destinationAddresses;
+            var outputDiv = document.getElementById('output2');
+            outputDiv.innerHTML = 'Distance:';
+            var results = response.rows[0].elements; 
+            outputDiv.innerHTML += results[0].distance.text;
+            outputDiv.innerHTML += '   Time:'
+            outputDiv.innerHTML += results[0].duration.text;
+          }
+     });
 };
 
     </script>
