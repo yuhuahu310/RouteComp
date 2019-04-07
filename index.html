@@ -191,16 +191,15 @@ AutocompleteDirectionsHandler.prototype.route = function() {
         }
       });
 
-var origin_ = new google.maps.LatLng(-27.5970141,-48.5614466);
-  var destination_ = new google.maps.LatLng(-27.5927353,-48.5556316);
-  // var origin_ = this.originPlaceId;
-  // var destination_ = this.destinationPlaceId;
+  var origin_ = {'placeId': this.originPlaceId};
+  var destination_ = {'placeId': this.destinationPlaceId};
+  var mode_ = this.travelMode;
 
 var service = new google.maps.DistanceMatrixService();
   service.getDistanceMatrix({
     origins: [origin_],
     destinations: [destination_],
-    travelMode: 'DRIVING',
+    travelMode: mode_,
     unitSystem: google.maps.UnitSystem.METRIC
   }, function(response, status) {
       if (status !== 'OK') {
@@ -219,8 +218,6 @@ var service = new google.maps.DistanceMatrixService();
 
 };
 
-// var origin = new google.maps.LatLng(-27.5970141,-48.5614466);
-//   var destination = new google.maps.LatLng(-27.5927353,-48.5556316);
 
 
     </script>
