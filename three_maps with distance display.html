@@ -135,6 +135,7 @@
         font-size: 13px;
         font-weight: 300;
       }
+<<<<<<< HEAD
       #output{
         font-size:20px;
       }
@@ -151,19 +152,17 @@
         width: 200px
       }*/
 
+=======
+>>>>>>> cabdb5522f5cc83ae6179eceb2e494512bb5612a
     </style>
   </head>
   <body>
-<!--     <div id="input-btn">
-      <input id="origin-input" class="controls" type="text" placeholder="Enter an origin location">
-    </div> -->
-   
     <div class="container">
       <div class="row">
         <div class="col-lg-4">
           <div>
               <input id="origin-input" class="controls" type="text"
-              placeholder="Enter an origin location">
+                  placeholder="Enter an origin location">
 
               <input id="destination-input" class="controls" type="text"
                   placeholder="Enter a destination location">
@@ -193,13 +192,13 @@
                   placeholder="Enter a destination location">
 
               <div id="mode-selector1" class="controls">
-                <input type="radio" name="type" id="changemode-walking1" checked="checked">
+                <input type="radio" name="type1" id="changemode-walking1" checked="checked">
                 <label for="changemode-walking1">Walking</label>
 
-                <input type="radio" name="type" id="changemode-transit1">
+                <input type="radio" name="type1" id="changemode-transit1">
                 <label for="changemode-transit1">Transit</label>
 
-                <input type="radio" name="type" id="changemode-driving1">
+                <input type="radio" name="type1" id="changemode-driving1">
                 <label for="changemode-driving1">Driving</label>
               </div>
           </div>
@@ -218,13 +217,13 @@
                   placeholder="Enter a destination location">
 
               <div id="mode-selector2" class="controls">
-                <input type="radio" name="type" id="changemode-walking2" checked="checked">
+                <input type="radio" name="type2" id="changemode-walking2" checked="checked">
                 <label for="changemode-walking2">Walking</label>
 
-                <input type="radio" name="type" id="changemode-transit2">
+                <input type="radio" name="type2" id="changemode-transit2">
                 <label for="changemode-transit2">Transit</label>
 
-                <input type="radio" name="type" id="changemode-driving2">
+                <input type="radio" name="type2" id="changemode-driving2">
                 <label for="changemode-driving2">Driving</label>
               </div>
           </div>
@@ -236,8 +235,11 @@
 
   </div><!-- div class="container" -->
 
+<<<<<<< HEAD
   
 
+=======
+>>>>>>> cabdb5522f5cc83ae6179eceb2e494512bb5612a
 
     <script>
 // This example requires the Places library. Include the libraries=places
@@ -246,44 +248,21 @@
 // src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
 
 function initMap() {
-  var originInput = document.getElementById('origin-input');
-  var originInput2 = originInput;
   var map = new google.maps.Map(document.getElementById('map'), {
     mapTypeControl: false,
     center: {lat: -33.8688, lng: 151.2195},
     zoom: 13
   });
 
-  new AutocompleteDirectionsHandler(map, originInput);
-// }
+  new AutocompleteDirectionsHandler(map);
 
-
-// function initMap1() {
-//   var map1 = new google.maps.Map(document.getElementById('map1'), {
-//     mapTypeControl: false,
-//     center: {lat:  37.423021, lng: -122.083739},
-//     zoom: 13
-//   });
-
-//   new AutocompleteDirectionsHandler1(map1);
-// }
-
-// function initMap2() {
-//   var map2 = new google.maps.Map(document.getElementById('map2'), {
-//   mapTypeControl: false,
-//   center: {lat:  37.423021, lng: -122.083739},
-//   zoom: 13
-//   });
-
-//   new AutocompleteDirectionsHandler2(map2);
-// }
   var map1 = new google.maps.Map(document.getElementById('map1'), {
     mapTypeControl: false,
     center: {lat:  37.423021, lng: -122.083739},
     zoom: 13
   });
 
-  new AutocompleteDirectionsHandler1(map1, originInput2);
+  new AutocompleteDirectionsHandler1(map1);
 
 
   var map2 = new google.maps.Map(document.getElementById('map2'), {
@@ -296,13 +275,11 @@ function initMap() {
 }
 
 
-
 /**
  * @constructor
  */
-function AutocompleteDirectionsHandler(map, originInput) {
+function AutocompleteDirectionsHandler(map) {
   this.map = map;
-  this.originInput = originInput;
   this.originPlaceId = null;
   this.destinationPlaceId = null;
   this.travelMode = 'WALKING';
@@ -310,11 +287,11 @@ function AutocompleteDirectionsHandler(map, originInput) {
   this.directionsDisplay = new google.maps.DirectionsRenderer;
   this.directionsDisplay.setMap(map);
 
-  // var originInput = document.getElementById('origin-input');
+  var originInput = document.getElementById('origin-input');
   var destinationInput = document.getElementById('destination-input');
   var modeSelector = document.getElementById('mode-selector');
 
-  var originAutocomplete = new google.maps.places.Autocomplete(this.originInput);
+  var originAutocomplete = new google.maps.places.Autocomplete(originInput);
   // Specify just the place data fields that you need.
   originAutocomplete.setFields(['place_id']);
 
@@ -423,9 +400,8 @@ var service = new google.maps.DistanceMatrixService();
 
 
 
-function AutocompleteDirectionsHandler1(map, originInput) {
+function AutocompleteDirectionsHandler1(map) {
   this.map = map;
-  this.originInput = originInput;
   this.originPlaceId = null;
   this.destinationPlaceId = null;
   this.travelMode = 'WALKING';
@@ -433,11 +409,11 @@ function AutocompleteDirectionsHandler1(map, originInput) {
   this.directionsDisplay = new google.maps.DirectionsRenderer;
   this.directionsDisplay.setMap(map);
 
-  // var originInput = document.getElementById('origin-input1');
+  var originInput = document.getElementById('origin-input1');
   var destinationInput = document.getElementById('destination-input1');
   var modeSelector = document.getElementById('mode-selector1');
 
-  var originAutocomplete = new google.maps.places.Autocomplete(this.originInput);
+  var originAutocomplete = new google.maps.places.Autocomplete(originInput);
   // Specify just the place data fields that you need.
   originAutocomplete.setFields(['place_id']);
 
@@ -665,9 +641,6 @@ var service = new google.maps.DistanceMatrixService();
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDiB83_sxJcvbvcVjgYzA7ANGtpJTUx10M&libraries=places&callback=initMap"
         async defer></script>
-
-<!--         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDiB83_sxJcvbvcVjgYzA7ANGtpJTUx10M&libraries=places&callback=initMap1"
-        async defer></script> -->
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>

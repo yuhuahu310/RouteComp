@@ -246,15 +246,15 @@
 // src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
 
 function initMap() {
-  var originInput = document.getElementById('origin-input');
-  var originInput2 = originInput;
+  // var originInput = document.getElementById('origin-input');
+  // var originInput2 = originInput;
   var map = new google.maps.Map(document.getElementById('map'), {
     mapTypeControl: false,
     center: {lat: -33.8688, lng: 151.2195},
     zoom: 13
   });
 
-  new AutocompleteDirectionsHandler(map, originInput);
+  new AutocompleteDirectionsHandler(map);
 // }
 
 
@@ -283,7 +283,7 @@ function initMap() {
     zoom: 13
   });
 
-  new AutocompleteDirectionsHandler1(map1, originInput2);
+  new AutocompleteDirectionsHandler1(map1);
 
 
   var map2 = new google.maps.Map(document.getElementById('map2'), {
@@ -300,9 +300,9 @@ function initMap() {
 /**
  * @constructor
  */
-function AutocompleteDirectionsHandler(map, originInput) {
+function AutocompleteDirectionsHandler(map) {
   this.map = map;
-  this.originInput = originInput;
+  // this.originInput = originInput;
   this.originPlaceId = null;
   this.destinationPlaceId = null;
   this.travelMode = 'WALKING';
@@ -310,11 +310,11 @@ function AutocompleteDirectionsHandler(map, originInput) {
   this.directionsDisplay = new google.maps.DirectionsRenderer;
   this.directionsDisplay.setMap(map);
 
-  // var originInput = document.getElementById('origin-input');
+  var originInput = document.getElementById('origin-input');
   var destinationInput = document.getElementById('destination-input');
   var modeSelector = document.getElementById('mode-selector');
 
-  var originAutocomplete = new google.maps.places.Autocomplete(this.originInput);
+  var originAutocomplete = new google.maps.places.Autocomplete(originInput);
   // Specify just the place data fields that you need.
   originAutocomplete.setFields(['place_id']);
 
@@ -426,9 +426,9 @@ AutocompleteDirectionsHandler.prototype.route = function() {
 
 
 
-function AutocompleteDirectionsHandler1(map, originInput) {
+function AutocompleteDirectionsHandler1(map) {
   this.map = map;
-  this.originInput = originInput;
+  // this.originInput = originInput;
   this.originPlaceId = null;
   this.destinationPlaceId = null;
   this.travelMode = 'WALKING';
@@ -436,11 +436,11 @@ function AutocompleteDirectionsHandler1(map, originInput) {
   this.directionsDisplay = new google.maps.DirectionsRenderer;
   this.directionsDisplay.setMap(map);
 
-  // var originInput = document.getElementById('origin-input1');
+  var originInput = document.getElementById('origin-input1');
   var destinationInput = document.getElementById('destination-input1');
   var modeSelector = document.getElementById('mode-selector1');
 
-  var originAutocomplete = new google.maps.places.Autocomplete(this.originInput);
+  var originAutocomplete = new google.maps.places.Autocomplete(originInput);
   // Specify just the place data fields that you need.
   originAutocomplete.setFields(['place_id']);
 
