@@ -111,7 +111,10 @@
         font-weight: 300;
       }
 
-      #output, #output1, #output2{
+      #disText1, #disText2, #disText3,
+      #timeText1, #timeText2, #timeText3,
+      #scoreText1, #scoreText2, #scoreText3,
+      #gradeText1, #gradeText2, #gradeText3 {
         font-size:20px;
         text-align: center;
         margin: 0px auto;
@@ -119,7 +122,10 @@
         line-height: 100px;
       }
 
-      #outputT, #output1T, #output2T{
+      #disVal1, #disVal2, #disVal3,
+      #timeVal1, #timeVal2, #timeVal3,
+      #scoreVal1, #scoreVal2, #scoreVal3,
+      #gradeVal1, #gradeVal2, #gradeVal3,{
         font-size:20px;
         text-align: center;
         margin: 0px auto;
@@ -297,25 +303,97 @@
 
       <div class="row">
         <div class="col-lg-4">
-          <div id="output"></div>
+          <div id="disText1"></div>
         </div>
         <div class="col-lg-4">
-          <div id="output1"></div>
+          <div id="disText2"></div>
         </div>
         <div class="col-lg-4">
-          <div id="output2"></div>
+          <div id="disText3"></div>
         </div>
       </div><!-- div class="row"-->
 
       <div class="row">
         <div class="col-lg-4">
-          <div id="outputT"></div>
+          <div id="disVal1"></div>
         </div>
         <div class="col-lg-4">
-          <div id="output1T"></div>
+          <div id="disVal2"></div>
         </div>
         <div class="col-lg-4">
-          <div id="output2T"></div>
+          <div id="disVal3"></div>
+        </div>
+      </div><!-- div class="row"-->
+
+      <div class="row">
+        <div class="col-lg-4">
+          <div id="timeText1"></div>
+        </div>
+        <div class="col-lg-4">
+          <div id="timeText2"></div>
+        </div>
+        <div class="col-lg-4">
+          <div id="timeText3"></div>
+        </div>
+      </div><!-- div class="row"-->
+
+      <div class="row">
+        <div class="col-lg-4">
+          <div id="timeVal1"></div>
+        </div>
+        <div class="col-lg-4">
+          <div id="timeVal2"></div>
+        </div>
+        <div class="col-lg-4">
+          <div id="timeVal3"></div>
+        </div>
+      </div><!-- div class="row"-->
+
+      <div class="row">
+        <div class="col-lg-4">
+          <div id="scoreText1"></div>
+        </div>
+        <div class="col-lg-4">
+          <div id="scoreText2"></div>
+        </div>
+        <div class="col-lg-4">
+          <div id="scoreText3"></div>
+        </div>
+      </div><!-- div class="row"-->
+
+      <div class="row">
+        <div class="col-lg-4">
+          <div id="scoreVal1"></div>
+        </div>
+        <div class="col-lg-4">
+          <div id="scoreVal2"></div>
+        </div>
+        <div class="col-lg-4">
+          <div id="scoreVal3"></div>
+        </div>
+      </div><!-- div class="row"-->
+
+      <div class="row">
+        <div class="col-lg-4">
+          <div id="gradeText1"></div>
+        </div>
+        <div class="col-lg-4">
+          <div id="gradeText2"></div>
+        </div>
+        <div class="col-lg-4">
+          <div id="gradeText3"></div>
+        </div>
+      </div><!-- div class="row"-->
+
+      <div class="row">
+        <div class="col-lg-4">
+          <div id="gradeVal1"></div>
+        </div>
+        <div class="col-lg-4">
+          <div id="gradeVal2"></div>
+        </div>
+        <div class="col-lg-4">
+          <div id="gradeVal3"></div>
         </div>
       </div><!-- div class="row"-->
 
@@ -505,26 +583,36 @@ var service = new google.maps.DistanceMatrixService();
       } else {
             var originList = response.originAddresses;
             var destinationList = response.destinationAddresses;
-            var outputDiv = document.getElementById('output');
-            var outputDivT = document.getElementById('outputT');
+            var outputDiv1 = document.getElementById('disText1');
+            var outputDiv2 = document.getElementById('disVal1');
+            var outputDiv3 = document.getElementById('timeText1');
+            var outputDiv4 = document.getElementById('timeVal1');
+            var outputDiv5 = document.getElementById('scoreText1');
+            var outputDiv6 = document.getElementById('scoreVal1');
+            var outputDiv7 = document.getElementById('gradeText1');
+            var outputDiv8 = document.getElementById('gradeVal1');
             var results = response.rows[0].elements; 
-            outputDiv.innerHTML = results[0].distance.text;
-            outputDivT.innerHTML = results[0].duration.text;
+            outputDiv1.innerHTML = 'Distance ';
+            outputDiv2.innerHTML = results[0].distance.text;
+            outputDiv3.innerHTML = 'Travel Time ';
+            outputDiv4.innerHTML = results[0].duration.text;
             // placeholder for now
+            outputDiv5.innerHTML = 'Crime Score ';
+            outputDiv7.innerHTML = 'Crime Grade';
             if (mode_ == 'DRIVING')
             {
-              outputDiv.innerHTML += '   Score: 88';
-              outputDiv.innerHTML += '   Grade: B+';
+              outputDiv6.innerHTML = '  88';
+              outputDiv8.innerHTML = '  B+';
             }
             if (mode_ == 'WALKING')
             {
-              outputDiv.innerHTML += '   Score: 74';
-              outputDiv.innerHTML += '   Grade: C';
+              outputDiv6.innerHTML = ' 74';
+              outputDiv8.innerHTML = ' C';
             }
             if (mode_ == 'TRANSIT')
             {
-              outputDiv.innerHTML += '   Score: 79';
-              outputDiv.innerHTML += '   Grade: C+';
+              outputDiv6.innerHTML = ' 79';
+              outputDiv8.innerHTML = ' C+';
             }
           }
      });
@@ -634,29 +722,39 @@ var service = new google.maps.DistanceMatrixService();
       } else {
             var originList = response.originAddresses;
             var destinationList = response.destinationAddresses;
-            var outputDiv = document.getElementById('output1');
-            var outputDivT = document.getElementById('output1T');
+            var outputDiv1 = document.getElementById('disText2');
+            var outputDiv2 = document.getElementById('disVal2');
+            var outputDiv3 = document.getElementById('timeText2');
+            var outputDiv4 = document.getElementById('timeVal2');
+            var outputDiv5 = document.getElementById('scoreText2');
+            var outputDiv6 = document.getElementById('scoreVal2');
+            var outputDiv7 = document.getElementById('gradeText2');
+            var outputDiv8 = document.getElementById('gradeVal2');
             var results = response.rows[0].elements; 
-            outputDiv.innerHTML = results[0].distance.text;
-            outputDivT.innerHTML = results[0].duration.text;
-          }
-
-          // placeholder for now
+            outputDiv1.innerHTML = 'Distance ';
+            outputDiv2.innerHTML = results[0].distance.text;
+            outputDiv3.innerHTML = 'Travel Time ';
+            outputDiv4.innerHTML = results[0].duration.text;
+            // placeholder for now
+            outputDiv5.innerHTML = 'Crime Score ';
+            outputDiv7.innerHTML = 'Crime Grade';
             if (mode_ == 'DRIVING')
             {
-              outputDiv.innerHTML += '   Score: 93';
-              outputDiv.innerHTML += '   Grade: A-';
+              outputDiv6.innerHTML = '  93';
+              outputDiv8.innerHTML = '  A-';
             }
             if (mode_ == 'WALKING')
             {
-              outputDiv.innerHTML += '   Score: 86';
-              outputDiv.innerHTML += '   Grade: B';
+              outputDiv6.innerHTML = ' 86';
+              outputDiv8.innerHTML = ' B';
             }
             if (mode_ == 'TRANSIT')
             {
-              outputDiv.innerHTML += '   Score: 83';
-              outputDiv.innerHTML += '   Grade: B-';
+              outputDiv6.innerHTML = ' 83';
+              outputDiv8.innerHTML = ' B-';
             }
+          }
+      
      });
 };
 
@@ -762,29 +860,38 @@ var service = new google.maps.DistanceMatrixService();
       } else {
             var originList = response.originAddresses;
             var destinationList = response.destinationAddresses;
-            var outputDiv = document.getElementById('output2');
-            var outputDivT = document.getElementById('output2T');
+            var outputDiv1 = document.getElementById('disText3');
+            var outputDiv2 = document.getElementById('disVal3');
+            var outputDiv3 = document.getElementById('timeText3');
+            var outputDiv4 = document.getElementById('timeVal3');
+            var outputDiv5 = document.getElementById('scoreText3');
+            var outputDiv6 = document.getElementById('scoreVal3');
+            var outputDiv7 = document.getElementById('gradeText3');
+            var outputDiv8 = document.getElementById('gradeVal3');
             var results = response.rows[0].elements; 
-            outputDiv.innerHTML = results[0].distance.text;
-            outputDivT.innerHTML = results[0].duration.text;
-          }
-
-          // placeholder for now
+            outputDiv1.innerHTML = 'Distance ';
+            outputDiv2.innerHTML = results[0].distance.text;
+            outputDiv3.innerHTML = 'Travel Time ';
+            outputDiv4.innerHTML = results[0].duration.text;
+            // placeholder for now
+            outputDiv5.innerHTML = 'Crime Score ';
+            outputDiv7.innerHTML = 'Crime Grade';
             if (mode_ == 'DRIVING')
             {
-              outputDiv.innerHTML += '   Score: 91';
-              outputDiv.innerHTML += '   Grade: A-';
+              outputDiv6.innerHTML = '  91';
+              outputDiv8.innerHTML = '  A-';
             }
             if (mode_ == 'WALKING')
             {
-              outputDiv.innerHTML += '   Score: 84';
-              outputDiv.innerHTML += '   Grade: B';
+              outputDiv6.innerHTML = ' 84';
+              outputDiv8.innerHTML = ' B';
             }
             if (mode_ == 'TRANSIT')
             {
-              outputDiv.innerHTML += '   Score: 85';
-              outputDiv.innerHTML += '   Grade: B';
+              outputDiv6.innerHTML = ' 85';
+              outputDiv8.innerHTML = ' B';
             }
+          }
      });
 };
 
