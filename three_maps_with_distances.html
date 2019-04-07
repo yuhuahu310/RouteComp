@@ -30,6 +30,10 @@
         font-size: 5em;
       }
 
+      h3{
+        font-size: 1.5em;
+      }
+
 
       .content{
         padding-top: 20%;
@@ -53,6 +57,7 @@
       #map, #map1, #map2 {
         height: 400px;
         border-radius: 10px;
+        margin-bottom: 50px;
       }
 
       /* Optional: Makes the sample page fill the window. */
@@ -116,22 +121,25 @@
       #timeText1, #timeText2, #timeText3,
       #scoreText1, #scoreText2, #scoreText3,
       #gradeText1, #gradeText2, #gradeText3 {
-        font-size:20px;
+        /*font-size:15px;*/
         text-align: center;
-        margin: 0px auto;
-        height: 100px;
-        line-height: 100px;
+        margin: 0 auto 50px auto;
+        font-weight: bold;
+
       }
 
       #disVal1, #disVal2, #disVal3,
       #timeVal1, #timeVal2, #timeVal3,
       #scoreVal1, #scoreVal2, #scoreVal3,
       #gradeVal1, #gradeVal2, #gradeVal3{
-        font-size:20px;
+        font-size:40px;
         text-align: center;
-        margin: 0px auto;
-        height: 100px; 
-        line-height: 100px;
+
+/*        height: 20px; 
+        line-height: 20px;*/
+        height: 50px;
+        line-height: 50px;
+        font-weight: bold;
       }
  
       #unified-origin-input{
@@ -216,8 +224,8 @@
           <div class="row">
             <div class="col-lg-12">
               <div class="content">
-                <h1>Maaaps</h1>
-                <h3>The Only Human-Feline Dating Website</h3>
+                <h1>RouteComp;</h1>
+                <h3>Make fast and informed decisions of your destinations</h3>
                 <hr id="for-header">
                 <button class="btn btn-default btn-lg"><a href="three_maps_with_distances.html#origin-btn">Get Started <i class="map marker alternate icon"></i></a></button>
               </div>
@@ -308,17 +316,6 @@
         </div>
       </div> <!-- div class="row"-->
 
-      <div class="row">
-        <div class="col-lg-4">
-          <div id="disText1"></div>
-        </div>
-        <div class="col-lg-4">
-          <div id="disText2"></div>
-        </div>
-        <div class="col-lg-4">
-          <div id="disText3"></div>
-        </div>
-      </div><!-- div class="row"-->
 
       <div class="row">
         <div class="col-lg-4">
@@ -334,15 +331,16 @@
 
       <div class="row">
         <div class="col-lg-4">
-          <div id="timeText1"></div>
+          <div id="disText1"></div>
         </div>
         <div class="col-lg-4">
-          <div id="timeText2"></div>
+          <div id="disText2"></div>
         </div>
         <div class="col-lg-4">
-          <div id="timeText3"></div>
+          <div id="disText3"></div>
         </div>
       </div><!-- div class="row"-->
+
 
       <div class="row">
         <div class="col-lg-4">
@@ -353,6 +351,31 @@
         </div>
         <div class="col-lg-4">
           <div id="timeVal3"></div>
+        </div>
+      </div><!-- div class="row"-->
+
+      <div class="row">
+        <div class="col-lg-4">
+          <div id="timeText1"></div>
+        </div>
+        <div class="col-lg-4">
+          <div id="timeText2"></div>
+        </div>
+        <div class="col-lg-4">
+          <div id="timeText3"></div>
+        </div>
+      </div><!-- div class="row"-->
+
+
+      <div class="row">
+        <div class="col-lg-4">
+          <div id="scoreVal1"></div>
+        </div>
+        <div class="col-lg-4">
+          <div id="scoreVal2"></div>
+        </div>
+        <div class="col-lg-4">
+          <div id="scoreVal3"></div>
         </div>
       </div><!-- div class="row"-->
 
@@ -370,13 +393,13 @@
 
       <div class="row">
         <div class="col-lg-4">
-          <div id="scoreVal1"></div>
+          <div id="gradeVal1"></div>
         </div>
         <div class="col-lg-4">
-          <div id="scoreVal2"></div>
+          <div id="gradeVal2"></div>
         </div>
         <div class="col-lg-4">
-          <div id="scoreVal3"></div>
+          <div id="gradeVal3"></div>
         </div>
       </div><!-- div class="row"-->
 
@@ -389,18 +412,6 @@
         </div>
         <div class="col-lg-4">
           <div id="gradeText3"></div>
-        </div>
-      </div><!-- div class="row"-->
-
-      <div class="row">
-        <div class="col-lg-4">
-          <div id="gradeVal1"></div>
-        </div>
-        <div class="col-lg-4">
-          <div id="gradeVal2"></div>
-        </div>
-        <div class="col-lg-4">
-          <div id="gradeVal3"></div>
         </div>
       </div><!-- div class="row"-->
 
