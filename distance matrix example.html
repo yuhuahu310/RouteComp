@@ -34,7 +34,7 @@
         width: 48%;
         padding-left: 2%;
       }
-      #output {
+      .output2 {
         font-size: 11px;
       }
     </style>
@@ -52,7 +52,7 @@ var destinationB = {lat: 50.087, lng: 14.421};
       <div>
         <strong>Results</strong>
       </div>
-      <div id="output"></div>
+      <div id="output2"></div>
     </div>
     <div id="map"></div>
     <script>
@@ -89,7 +89,7 @@ var destinationB = {lat: 50.087, lng: 14.421};
           } else {
             var originList = response.originAddresses;
             var destinationList = response.destinationAddresses;
-            var outputDiv = document.getElementById('output');
+            var outputDiv = document.getElementById('output'+'2');
             outputDiv.innerHTML = '';
             deleteMarkers(markersArray);
 
