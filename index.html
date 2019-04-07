@@ -202,7 +202,7 @@ var service = new google.maps.DistanceMatrixService();
   service.getDistanceMatrix({
     origins: [origin_],
     destinations: [destination_],
-    travelMode: 'DRIVING',
+    travelMode: this.travelMode,
     unitSystem: google.maps.UnitSystem.METRIC
   }, function(response, status) {
       if (status !== 'OK') {
